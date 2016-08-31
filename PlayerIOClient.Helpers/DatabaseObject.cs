@@ -1,9 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Reflection;
 
 namespace PlayerIOClient.Helpers
 {
     public static class DatabaseObjectExtensions
     {
+        public static string Version(this DatabaseObject input) => (string)Helpers.Reflection.GetInstanceField(typeof(DatabaseObject), input, "Version");
+
         private static Dictionary<object, object> ToDictionary(this DatabaseObject dbo, object input)
         {
             var _dict = new Dictionary<object, object>();
@@ -25,8 +29,6 @@ namespace PlayerIOClient.Helpers
 
             return _dict;
         }
-
         public static Dictionary<object, object> ToDictionary(this DatabaseObject dbo) => ToDictionary(dbo, dbo);
-        public static string SerializeToJson(this DatabaseObject dbo) => Newtonsoft.Json.JsonConvert.SerializeObject(ToDictionary(dbo, dbo));
     }
 }
