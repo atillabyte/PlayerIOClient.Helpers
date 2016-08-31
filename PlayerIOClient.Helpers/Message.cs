@@ -7,7 +7,7 @@ namespace PlayerIOClient.Helpers
 {
     public static class MessageExtensions
     {
-        public static string Serialize(this Message message)
+        public static Dictionary<string, object> ToDictionary(this Message message)
         {
             var _dict = new Dictionary<string, object>();
             var _properties = new Dictionary<uint, Dictionary<string, object>>();
@@ -18,10 +18,15 @@ namespace PlayerIOClient.Helpers
             _dict.Add("type", message.Type);
             _dict.Add("properties", _properties);
 
-            return JsonConvert.SerializeObject(_dict);
+            return _dict;
         }
 
-        public static Message Deserialize(this Message m, string input)
+        public static string Serialize(this Message message)
+        {
+            return JsonConvert.SerializeObject(message.ToDictionary());
+        }
+
+        public static Message Deserialize(this Message message, string input)
         {
             var _dict = JObject.Parse(input);
             var _properties = _dict["properties"].ToObject<Dictionary<uint, Dictionary<string, object>>>();

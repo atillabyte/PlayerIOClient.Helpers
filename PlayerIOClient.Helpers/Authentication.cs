@@ -41,10 +41,10 @@ namespace PlayerIOClient.Helpers
                     return AuthenticationType.Kongregate;
             }
 
-            if (Regex.IsMatch(token, @"\b+[a-zA-Z0-9\.\-_]+@[a-zA-Z0-9\.\-]+\.[a-zA-Z0-9\.\-]+\b") || token.StartsWith("simple"))
+            if (Regex.IsMatch(token, @"\b+[a-zA-Z0-9\.\-_]+@[a-zA-Z0-9\.\-]+\.[a-zA-Z0-9\.\-]+\b"))
                 return AuthenticationType.Simple;
 
-            return AuthenticationType.Unknown;
+            return AuthenticationType.UserId;
         }
 
         private static Client Authenticate(string gameid, string token, string auth, AuthenticationType type = AuthenticationType.Invalid) =>

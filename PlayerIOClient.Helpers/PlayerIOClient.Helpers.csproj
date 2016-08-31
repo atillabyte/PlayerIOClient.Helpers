@@ -54,6 +54,7 @@
     <Compile Include="Connections.cs" />
     <Compile Include="DatabaseObject.cs" />
     <Compile Include="Helpers\CircularList.cs" />
+    <Compile Include="Helpers\Reflection.cs" />
     <Compile Include="Message.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
