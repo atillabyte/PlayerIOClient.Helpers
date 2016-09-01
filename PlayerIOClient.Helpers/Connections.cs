@@ -16,7 +16,14 @@
 
         public static void Empty() => _connections.Clear();
 
-        public static void Send(Message message) => _connections.Next.Send(message);
+        public static void Send(Message message)
+        {
+            var next = _connections.Next;
+            if (next.Connected)
+                next.Send(message);
+            else
+                Send(message);
+        }
 
         public static void Send(string type, params object[] input) => Send(Message.Create(type, input));
     }
