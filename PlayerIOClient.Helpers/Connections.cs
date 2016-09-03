@@ -14,7 +14,6 @@
             _count = connections.Length;
         }
 
-        public static void Empty() => _connections.Clear();
 
         public static void Send(Message message)
         {
@@ -24,6 +23,8 @@
             else
                 Send(message);
         }
+
+        public static void Empty() => _connections.Clear();
 
         public static void Send(string type, params object[] input) => Send(Message.Create(type, input));
     }
