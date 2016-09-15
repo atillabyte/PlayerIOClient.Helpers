@@ -1,19 +1,22 @@
-﻿namespace PlayerIOClient.Helpers
+﻿using System.Linq;
+
+namespace PlayerIOClient.Helpers
 {
-    public class Connections
+    public static class Connections
     {
         private static CircularList<Connection> _connections = new CircularList<Connection>() { Loop = true };
-        private static int _count = 0;
-
-        public static int Count => _count;
         public static Connection[] Collection => _connections.ToArray();
 
+        public static int Connected => _connections.Count(x => x.Connected);
+        public static int Count => _connections.Count;
+        
         public static void Setup(params Connection[] connections)
         {
+            _connections.Clear();
             _connections.AddRange(connections);
-            _count = connections.Length;
         }
 
+        public static void Send(string type, params object[] input) => Send(Message.Create(type, input));
 
         public static void Send(Message message)
         {
@@ -25,7 +28,5 @@
         }
 
         public static void Empty() => _connections.Clear();
-
-        public static void Send(string type, params object[] input) => Send(Message.Create(type, input));
     }
 }

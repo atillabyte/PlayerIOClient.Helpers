@@ -7,7 +7,7 @@ namespace PlayerIOClient.Helpers
     // A miniature version of RabbitIO (https://github.com/Decagon/Rabbit).
     public static class Authentication
     {
-        public enum AuthenticationType { Invalid, Unknown, Facebook, Kongregate, ArmorGames, Simple, Public, UserId = Simple }
+        public enum AuthenticationType { Invalid, Unknown, Facebook, Kongregate, ArmorGames, Simple, Public, Token, UserId = Simple  }
 
         /// <summary>Connects to the PlayerIO service using the provided credentials.</summary>
         /// <param name="user">The user id, token or email address.</param>
@@ -31,6 +31,8 @@ namespace PlayerIOClient.Helpers
             if (string.IsNullOrEmpty(user)) {
                 if (Regex.IsMatch(auth, @"[0-9a-z]$", RegexOptions.IgnoreCase) && auth.Length > 90)
                     return AuthenticationType.Facebook;
+                if (auth.Length == 88)
+                    return AuthenticationType.Token;
                 return AuthenticationType.Invalid;
             }
 
@@ -52,6 +54,7 @@ namespace PlayerIOClient.Helpers
                type == AuthenticationType.Simple     ? PlayerIO.QuickConnect.SimpleConnect(gameid, user, auth, null):
                type == AuthenticationType.Kongregate ? PlayerIO.QuickConnect.KongregateConnect(gameid, user, auth, null):
                type == AuthenticationType.ArmorGames ? PlayerIO.Authenticate(gameid, "public", new Dictionary<string, string> { { "userId", user }, { "authToken", auth } }, null):
-               type == AuthenticationType.Public     ? PlayerIO.Connect(gameid, "public", user, auth, null) : null;
+               type == AuthenticationType.Public     ? PlayerIO.Connect(gameid, "public", user, auth, null) :
+               type == AuthenticationType.Token      ? PlayerIO.Connect(gameid, "public", "user", "", null).SetToken(auth) : null;
     }
 }
