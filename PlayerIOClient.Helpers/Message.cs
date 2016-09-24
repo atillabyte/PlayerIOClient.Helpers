@@ -20,10 +20,13 @@ namespace PlayerIOClient.Helpers
 
             return dict;
         }
+    }
 
+    public static class MessageConverter
+    {
         public static string Serialize(this Message message) => JsonConvert.SerializeObject(message.ToDictionary());
 
-        public static Message Deserialize(this Message message, string input)
+        public static Message Deserialize(string input)
         {
             var dict = JObject.Parse(input);
             var properties = dict["properties"].ToObject<List<object>>();
