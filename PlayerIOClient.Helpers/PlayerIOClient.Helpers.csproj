@@ -52,7 +52,7 @@
     <Compile Include="Authentication.cs" />
     <Compile Include="Client.cs" />
     <Compile Include="Connection.cs" />
-    <Compile Include="Connections.cs" />
+    <Compile Include="ConnectionLoop.cs" />
     <Compile Include="DatabaseObject.cs" />
     <Compile Include="Helpers\CircularList.cs" />
     <Compile Include="Helpers\Reflection.cs" />

@@ -2,7 +2,7 @@
 
 namespace PlayerIOClient.Helpers
 {
-    public static class Connections
+    public static class ConnectionLoop
     {
         private static CircularList<Connection> _connections = new CircularList<Connection>() { Loop = true };
         public static Connection[] Collection => _connections.ToArray();

@@ -10,10 +10,10 @@ namespace PlayerIOClient.Helpers
         public static Dictionary<string, object> ToDictionary(this Message message)
         {
             var dict = new Dictionary<string, object>();
-            var properties = new Dictionary<uint, Dictionary<string, object>>();
+            var properties = new List<object>();
 
             for (uint i = 0; i < message.Count; i++)
-                properties.Add(i, new Dictionary<string, object>() { { message[i].GetType().FullName, message[i] } });
+                properties.Add(message[i] is byte[] ? new[] { Convert.ToBase64String(message[i] as byte[]) } : message[i]);
 
             dict.Add("type", message.Type);
             dict.Add("properties", properties);
@@ -26,18 +26,14 @@ namespace PlayerIOClient.Helpers
         public static Message Deserialize(this Message message, string input)
         {
             var dict = JObject.Parse(input);
-            var properties = dict["properties"].ToObject<Dictionary<uint, Dictionary<string, object>>>();
+            var properties = dict["properties"].ToObject<List<object>>();
             var output = Message.Create((string)dict["type"]);
 
-            foreach (var dictionary in properties.Values) {
-                foreach (var property in dictionary) {
-                    var type = Type.GetType(property.Key, false);
-                    var value = property.Value;
-
-                    output.Add(type == null ? value :
-                        type.FullName == "System.Byte[]" ? Convert.ChangeType(Convert.FromBase64String(value as string), type)
-                        : Convert.ChangeType(value, type));
-                }
+            foreach (var value in properties) {
+                if (value is JArray)
+                    output.Add(Convert.FromBase64String(((JArray)value)[0].Value<string>()));
+                else
+                    output.Add(value);
             }
 
             return output;
